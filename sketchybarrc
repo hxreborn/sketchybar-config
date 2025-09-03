@@ -80,6 +80,7 @@ source "$RELPATH/sketchy-items/spaces.sh"
 source "$RELPATH/sketchy-items/frontapp.sh"
 source "$RELPATH/sketchy-items/menus.sh"
 source "$RELPATH/sketchy-items/calendar.sh"
+source "$RELPATH/sketchy-items/caffeinate.sh"
 source "$RELPATH/sketchy-items/mic.sh"
 source "$RELPATH/sketchy-items/volume.sh"
 source "$RELPATH/sketchy-items/battery.sh"
@@ -96,7 +97,7 @@ source "$RELPATH/sketchy-items/cpu.sh"
 
 sketchybar --add bracket base-controls battery wifi display \
   --set base-controls "${zones[@]}" \
-  --add bracket volume_controls volume_icon mic \
+  --add bracket volume_controls volume_icon mic caffeinate \
   --set volume_controls "${zones[@]}" \
   --add bracket more_menu '/moremenu\..*/' "${menuitem[@]}" \
   --set more_menu "${zones[@]}" 
