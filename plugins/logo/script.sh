@@ -43,7 +43,7 @@ menu_off() {
     --set front_app drawing=on \
     --animate tanh 15 --set $NAME background.drawing=off \
     icon.color=$TEXT_MOON \
-    icon=􀆔 \
+    icon=􀣺 \
     icon.font="$FONT:Semibold:14.0" \
     icon.y_offset=0 \
     padding_right=10 \

@@ -2,7 +2,7 @@
 SCRIPT_POPUP_TOGGLE="export PATH=$PATH; $RELPATH/plugins/logo/script.sh \"$FONT\" $X_BAR_PADDING"
 
 logo=(
-  icon=􀆔
+  icon=􀣺
   padding_left=$X_BAR_PADDING
   padding_right=10
   icon.font="$FONT:Semibold:14.0"
