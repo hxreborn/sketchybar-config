@@ -1,7 +1,9 @@
 # Utility Bar - Rosé Pine Moon
+
+> Personal fork of [Kcraft059/sketchybar-config](https://github.com/Kcraft059/sketchybar-config)
+
 <div align=center>
-<img width="1470" height="40" alt="Screenshot 2025-08-21 at 12 39 13" src="https://github.com/user-attachments/assets/230c1063-cb96-4686-9745-270335e650e5" />
-<img width="1470" height="40" alt="Screenshot 2025-08-21 at 12 39 39" src="https://github.com/user-attachments/assets/c34be030-27f3-4bf4-a7df-d1119208c824" />
+<img width="1470" alt="Personal SketchyBar Configuration" src="https://private-user-images.githubusercontent.com/32096750/486206391-d0d85f07-1bef-4d4d-bfdd-396804c96048.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTcwOTI2MjIsIm5iZiI6MTc1NzA5MjMyMiwicGF0aCI6Ii8zMjA5Njc1MC80ODYyMDYzOTEtZDBkODVmMDctMWJlZi00ZDRkLWJmZGQtMzk2ODA0Yzk2MDQ4LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA5MDUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwOTA1VDE3MTIwMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTA0N2FjNTlkYzhmZjQwYmFhYTVjZmYzYjllZTQxOWM2YTUyNjU0ZmVhMGE4YmU5MWMyNGFjOTA5OTc0NTU3YTAmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.JeGqKFtWQJnV-LoS_05qGznOVX_Zkm9rjuULMpnDrOw" />
 
 </div>
 
@@ -18,7 +20,7 @@ See https://github.com/FelixKratz/SketchyBar/discussions/47?sort=new#discussionc
 With the installer :
 
 ```sh
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Kcraft059/sketchybar-config/main/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/hexpreso/sketchybar-config/main/install.sh)"
 ```
 
 <details>
@@ -45,7 +47,7 @@ brew install --cask font-SF-Pro font-sketchybar-app-font
 
 mkdir -p ~/.config
 cd ~/.config/
-git clone https://www.github.com/Kcraft059/sketchybar-config sketchybar
+git clone https://www.github.com/hexpreso/sketchybar-config sketchybar
 
 sketchybar --reload
 ```
