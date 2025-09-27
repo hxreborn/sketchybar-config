@@ -10,6 +10,9 @@ ICON_WIFI_OFF=􀙈
 getname() {
   WIFI_PORT=$(networksetup -listallhardwareports | awk '/Hardware Port: Wi-Fi/{getline; print $2}')
   WIFI="$(system_profiler SPAirPortDataType | awk '/Current Network/ {getline;$1=$1; gsub(":",""); print;exit}')" #$(ipconfig getsummary $WIFI_PORT | awk -F': ' '/ SSID : / {print $2}')
+  if [[ "$WIFI" == *"redacted"* ]] && [[ -x ~/Applications/wifi-unredactor.app/Contents/MacOS/wifi-unredactor ]]; then
+    WIFI=$(~/Applications/wifi-unredactor.app/Contents/MacOS/wifi-unredactor 2>/dev/null | jq -r '.ssid // "<redacted>"' 2>/dev/null)
+  fi
   HOTSPOT=$(ipconfig getsummary $WIFI_PORT | grep sname | awk '{print $3}')
   IP_ADDRESS=$(scutil --nwi | grep address | sed 's/.*://' | tr -d ' ' | head -1)
   PUBLIC_IP=$(curl -m 2 https://ipinfo.io 2>/dev/null 1>&2; echo $?)
@@ -41,7 +44,7 @@ getname() {
     ICON_COLOR=$SUBTLE
     LABEL="$WIFI (no internet)"
   fi
-  
+
 
 
   wifi=(
@@ -73,7 +76,7 @@ setscroll() {
 }
 
 case "$SENDER" in
-  "mouse.entered") setscroll on 
+  "mouse.entered") setscroll on
   ;;
   "mouse.exited") setscroll off
   ;;
