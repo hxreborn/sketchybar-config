@@ -6,8 +6,11 @@ PERCENT_WIDTH=24
 
 GRAPH_SCRIPT="export PATH=$PATH; $RELPATH/plugins/graph/script.sh"
 
+# Allow override of update frequency via CPU_UPDATE_FREQ from config
+: "${CPU_UPDATE_FREQ:=2}"
+
 graph=(
-  graph.color=$SUBTLE_MOON
+  graph.color=$SUBTLE
   drawing=off
   y_offset=$((-$BAR_HEIGHT / 2 + $GRAPH_MARGIN + 7))
   padding_left=0
@@ -16,11 +19,10 @@ graph=(
   label.drawing=off
   background.padding_left=4
   background.padding_right=0
-  #background.color=$LOVE_MOON
   background.drawing=on
   background.height=$(($BAR_HEIGHT - $GRAPH_MARGIN * 2 - 9))
   script="$GRAPH_SCRIPT"
-  update_freq=2
+  update_freq=$CPU_UPDATE_FREQ
 )
 
 graph_percent=(
@@ -32,7 +34,7 @@ graph_percent=(
   label.padding_left=0
   icon.drawing=off
   label.drawing=on
-  #background.color=$LOVE_MOON
+  #background.color=$CRITICAL
   background.drawing=off
   label="37%"
   label.width=$PERCENT_WIDTH
@@ -49,10 +51,10 @@ graph_label=(
   label.padding_left=0
   icon.drawing=off
   label.drawing=on
-  #background.color=$LOVE_MOON
+  #background.color=$CRITICAL
   background.drawing=off
   label="GLUOP ORPI EIOP - EOIYUEUI 33%"
-  label.color=$SUBTLE_MOON
+  label.color=$SUBTLE
   label.font="$FONT:Regular:7.0"
 )
 

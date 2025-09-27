@@ -3,7 +3,7 @@ SCRIPT_MIC="export PATH=$PATH; $RELPATH/plugins/mic/script.sh"
 
 mic=(
   icon=􀊱
-  icon.color=$IRIS_MOON
+  icon.color=$ACTIVE
   label.font="$FONT:Regular:14.0"
   padding_left=0
   #update_freq=10

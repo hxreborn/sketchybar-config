@@ -2,7 +2,8 @@
 
 ARTWORK_MARGIN=5
 TITLE_MARGIN=11
-INFO_WIDTH=80
+# Allow override from global config via MUSIC_INFO_WIDTH
+INFO_WIDTH=${MUSIC_INFO_WIDTH:-80}
 
 command -v 'menubar' 2>/dev/null 1>&2 || alias menubar="$RELPATH/menubar"
 
@@ -22,7 +23,7 @@ music_artwork=(
   click_script="$SCRIPT_CLICK_MUSIC_ARTWORK"
   icon="􀊆"
   icon.drawing=off
-  icon.color=$HIGH_MED_MOON
+  icon.color=$HIGH_MED
   icon.shadow.drawing=on
   icon.shadow.color=$BAR_COLOR
   icon.shadow.distance=3
@@ -32,7 +33,7 @@ music_artwork=(
   icon.padding_left=-3
   background.drawing=on
   background.height=$(($BAR_HEIGHT - $ARTWORK_MARGIN * 2))
-  background.image.border_color=$MUTED_MOON
+  background.image.border_color=$MUTED
   background.image.border_width=1
   background.image.corner_radius=4
   background.image.padding_right=1
@@ -46,7 +47,7 @@ music_title=(
   drawing=off
   script="$SCRIPT_MUSIC_TITLE"
   click_script="$SCRIPT_CLICK_MUSIC_TITLE"
-  label.color=$TEXT_MOON
+  label.color=$TEXT
   icon.drawing=off
   #background.color=0xff0000ff
   #background.height=8
@@ -65,7 +66,7 @@ music_subtitle=(
   drawing=off
   script="$SCRIPT_MUSIC_TITLE"
   click_script="$SCRIPT_CLICK_MUSIC_TITLE"
-  label.color=$SUBTLE_MOON
+  label.color=$SUBTLE
   icon.drawing=off
   #background.color=0xffff0000
   #background.height=8
@@ -83,7 +84,7 @@ music_subtitle=(
 center_separator=(
   icon="|"
   script="$SCRIPT_CENTER_SEP"
-  icon.color=$SUBTLE_MOON
+  icon.color=$SUBTLE
   icon.font="$FONT:Bold:16.0"
   icon.y_offset=2
   label.drawing=off

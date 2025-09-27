@@ -8,12 +8,21 @@
 </div>
 
 
-This is a config I made which aggregate functionnality and aesthetics.
+This is a config I made which aggregate functionnality and aesthetics, made in mind to be Nix-Compliant.
 
 See https://github.com/FelixKratz/SketchyBar/discussions/47?sort=new#discussioncomment-14058252
 
 > [!WARNING] 
 > Some of the functionnalities of the bar are not working currently in MacOS Tahoe.
+> This implies that: Space switching might not work properly, some menu items won't trigger and be removed from the macos native menubar when trying to trigger those, wifi won't be able to show SSID and will instead show \<redacted\> ([issue](<https://developer.apple.com/forums/thread/763051>)), and other not yet tested bugs might occur.
+
+## A little demonstration of the functionalities :
+
+<img width="2940" height="1912" alt="Screenshot 2025-08-09 at 18 49 42" src="https://github.com/user-attachments/assets/23066c77-1b31-4372-a737-8bf450af1d80" />
+<img width="2940" height="1912" alt="Screenshot 2025-08-09 at 18 55 12" src="https://github.com/user-attachments/assets/0406413d-4468-4ba7-b55d-1c59e7e52cfb" />
+
+
+https://github.com/user-attachments/assets/c9db52a4-d7fe-4daa-a904-cd201476556c
 
 ## Install :
 
@@ -56,15 +65,117 @@ For yabai users : `yabai -m config external_bar all:36:0`
 
 </details>
 
-For Nix-Darwin users see : https://github.com/Kcraft059/Nix-Config/blob/master/home/darwin/sketchybar.nix
+For Nix-Darwin users see : [here](#nix--nix-darwin-integration)
+or alternatively https://github.com/Kcraft059/Nix-Config/blob/master/home/darwin/sketchybar.nix
 
 > [!NOTE]
 > Aerospace isn't yet supported, if you wanna implement it see : https://github.com/FelixKratz/SketchyBar/discussions/47?sort=new#discussioncomment-14081291
 
-## A little demonstration of the functionalities :
+## Configuration
 
-<img width="2940" height="1912" alt="Screenshot 2025-08-09 at 18 49 42" src="https://github.com/user-attachments/assets/23066c77-1b31-4372-a737-8bf450af1d80" />
-<img width="2940" height="1912" alt="Screenshot 2025-08-09 at 18 55 12" src="https://github.com/user-attachments/assets/0406413d-4468-4ba7-b55d-1c59e7e52cfb" />
+A lightweight `config.sh` (or an externally provided file via the `SKETCHYBAR_CONFIG` env var) now allows you to tweak common behaviors without patching the repo.
 
+Defaults (only apply if a variable is unset):
 
-https://github.com/user-attachments/assets/c9db52a4-d7fe-4daa-a904-cd201476556c
+```bash
+NOTCH_WIDTH=180       # Reserved width for the display notch
+MUSIC_INFO_WIDTH=80   # Width (px) for music title & subtitle labels
+CPU_UPDATE_FREQ=2     # Seconds between CPU graph samples
+```
+
+Usage order of precedence:
+1. If `SKETCHYBAR_CONFIG` points to a readable file, it is sourced.
+2. Else if `config.sh` exists in the repo directory, it is sourced (see exmaples in ./config-examples/).
+3. Fallback defaults are applied inside `sketchybarrc`.
+
+You can remove or comment variables you don't want to override—defaults remain unaffected.
+
+### Adding a custom theme 
+
+In the config.sh, you can choose the theme used for the bar :
+
+```bash
+COLOR_SCHEME="rosepine-moon"
+```
+
+You can also set your own theme by adding a theme.sh file, or by specifying the path to the theme file :
+
+```bash
+COLOR_SCHEME="my-theme"
+THEME_FILE_PATH="$HOME/.config/sketchybar-config/theme.sh"
+```
+
+The file must follow the format in the example (./config-examples)
+
+### Adjusting for the Notch or Clipping Music
+If album/title text appears clipped by the notch, increase either:
+- `NOTCH_WIDTH` (reserves more center space), or
+- `MUSIC_INFO_WIDTH` (shrinks / expands label region; smaller can prevent collision with other center items).
+
+Reload after changing values: `sketchybar --reload` (tip you can also ⇧+click on the cloverleaf logo to reload the config directly from the bar).
+
+## Nix / Nix-Darwin Integration
+There are multiple ways to integrate these settings through Nix flakes.
+
+### 1. Flake Input 
+```nix
+{
+  inputs.sketchybar-config.url = "github:kcraft059/sketchybar-config";
+  # ...
+}
+```
+Then deploy the repo content into `~/.config/sketchybar` (via home-manager or a derivation) and drop a `config.sh` alongside.
+
+#### Example Home-Manager Module Snippet
+An opinionated module integrating this repo as a flake input and enabling the bar conditionally:
+```nix
+{ config, inputs, pkgs, lib, ... }:
+{
+  options.home-config.status-bar = {
+    enable = lib.mkEnableOption "Whether to enable the Custom Menu-Bar service";
+  };
+
+  config = lib.mkIf config.home-config.status-bar.enable {
+    home.packages = with pkgs; [
+      sketchybar-app-font
+      # menubar-cli # (needs to come from an overlay, check https://github.com/Kcraft059/Nix-Config/blob/master/overlays/menubar-cli.nix for implementation - bin by @FelixKratz) 
+    ];
+
+    programs.sketchybar = {
+      enable = true;
+      service = rec {
+        enable = true;
+        errorLogFile = "/tmp/sketchybar.log";
+        outLogFile = errorLogFile;
+      };
+      configType = "bash";
+      config = {
+        source = "${inputs.sketchybar-config}"; # flake input path
+        recursive = true; # copy entire tree
+      };
+      extraPackages = with pkgs; [
+        # menubar-cli # see above
+        imagemagick
+        macmon
+      ];
+    };
+
+    # Example of providing dynamic icon map or other generated files
+    xdg.configFile = {
+      "sketchybar/dyn-icon_map.sh".source = "${pkgs.sketchybar-app-font}/bin/icon_map.sh";
+
+      # Optional: inline user overrides without forking
+      # "sketchybar/config.sh".text = ''
+      #   NOTCH_WIDTH=200
+      #   MUSIC_INFO_WIDTH=100
+      # '';
+    };
+
+  };
+}
+```
+
+## Troubleshooting
+- CPU not showing: Ensure `cpu.sh` is sourced (it is by default) and run `sketchybar --query item graph.percent` to verify presence.
+- Music overlapping notch: Bump `NOTCH_WIDTH` in small increments (e.g. +10) or reduce `MUSIC_INFO_WIDTH`.
+- Config not applied: Echo inside your `config.sh` or run `grep NOTCH_WIDTH ~/.config/sketchybar/sketchybarrc` to confirm dynamic variable usage.

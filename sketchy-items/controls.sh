@@ -11,10 +11,10 @@ for item in "${menuitem[@]}"; do
   alias=(
     drawing=off
     #background.color=0xffff0000
-    padding_left=-2
-    padding_right=-6
+    padding_left=-3
+    padding_right=-7
     #x_offset=20
-    alias.color=$TEXT_MOON
+    alias.color=$GLOW
     label.drawing=off
     icon.drawing=off
     click_script="$SCRIPT_CLICK_MENU_ITEM"

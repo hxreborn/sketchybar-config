@@ -1,6 +1,6 @@
 #!/bin/bash
 export RELPATH=$(dirname $0)/../..;
-source $RELPATH/colors.sh
+source $RELPATH/set_colors.sh
 
 ICON_HOTSPOT=􀉤
 ICON_WIFI=􀙇
@@ -18,19 +18,19 @@ getname() {
 
   if [[ $HOTSPOT != "" ]]; then
     ICON=$ICON_HOTSPOT
-    ICON_COLOR=$FOAM_MOON
+    ICON_COLOR=$GLOW
     LABEL=$HOTSPOT
   elif [[ $WIFI != "" ]]; then
     ICON=$ICON_WIFI
-    ICON_COLOR=$PINE_MOON
+    ICON_COLOR=$SELECT
     LABEL="$WIFI"
   elif [[ $IP_ADDRESS != "" ]]; then
     ICON=$ICON_WIFI
-    ICON_COLOR=$ROSE_MOON
+    ICON_COLOR=$WARN
     LABEL="on"
   else
     ICON=$ICON_WIFI_OFF
-    ICON_COLOR=$LOVE_MOON
+    ICON_COLOR=$CRITICAL
     LABEL="off"
   fi
 
@@ -38,7 +38,7 @@ getname() {
 
   if [[ $PUBLIC_IP != "0" && $LABEL != "off" ]];then
     ICON=$ICON_WIFI_ERROR
-    ICON_COLOR=$SUBTLE_MOON
+    ICON_COLOR=$SUBTLE
     LABEL="$WIFI (no internet)"
   fi
   

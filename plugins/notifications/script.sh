@@ -1,6 +1,6 @@
 #!/bin/bash
 export RELPATH=$(dirname $0)/../..;
-source $RELPATH/colors.sh
+source $RELPATH/set_colors.sh
 
 # Check for github token 
 if [[ -f ~/.github_token ]]; then
@@ -25,18 +25,18 @@ GITHUB_TOKEN="$(cat ~/.github_token)" # Should be a PAT with only notification r
   if [[ $curlSuccess != 0 ]];then 
     item+=(
       icon=􀋞
-      icon.color=$SUBTLE_MOON
+      icon.color=$SUBTLE
       label="--"
     )
   elif [ $count -gt 0 ]; then
     item+=(
       icon=􀝗
-      icon.color=$LOVE_MOON
+      icon.color=$CRITICAL
     )
   else 
     item+=(
       icon=􀋚
-      icon.color=$PINE_MOON
+      icon.color=$SELECT
     )
   fi
 
@@ -44,10 +44,10 @@ GITHUB_TOKEN="$(cat ~/.github_token)" # Should be a PAT with only notification r
 else
 
   ### If No github token, hide the menu item
-  
   item=(
     width=0
-    icon=""
+		label.drawing="off"
+		icon.drawing="off"
   )
   sketchybar --set "$NAME" "${item[@]}"
 fi
