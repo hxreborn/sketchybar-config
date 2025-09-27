@@ -52,6 +52,10 @@ if [[ "$COLOR_SCHEME" == "rosepine-moon" ]]; then
 	export POPUP_BORDER_COLOR=$HIGH_MED
 
 	export SHADOW_COLOR=$TEXT
+
+	# Custom caffeinate colors
+	export CAFFEINATE_ACTIVE_COLOR=$NOTICE
+	export CAFFEINATE_INACTIVE_COLOR=$MUTED
 fi
 
 # Catpuccin Mocha theme
@@ -88,4 +92,8 @@ if [[ "$COLOR_SCHEME" == "catppuccin-mocha" ]]; then
 	export POPUP_BORDER_COLOR=$HIGH_MED
 
 	export SHADOW_COLOR=$TEXT
+
+	# Custom caffeinate colors
+	export CAFFEINATE_ACTIVE_COLOR=$NOTICE
+	export CAFFEINATE_INACTIVE_COLOR=$MUTED
 fi
