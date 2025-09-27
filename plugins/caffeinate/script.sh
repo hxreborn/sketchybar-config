@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 export RELPATH="$(dirname "${BASH_SOURCE[0]}")/../.."
-if ! source "$RELPATH/colors.sh" 2>/dev/null; then
-    echo "ERROR: Cannot source colors.sh from $RELPATH" >&2
+if ! source "$RELPATH/set_colors.sh" 2>/dev/null; then
+    echo "ERROR: Cannot source set_colors.sh from $RELPATH" >&2
     exit 1
 fi
 
@@ -12,9 +12,9 @@ is_caffeinating() {
 
 update_display() {
     if is_caffeinating; then
-        sketchybar --set "$NAME" icon="󰅶" icon.color="$GOLD_MOON"
+        sketchybar --set "$NAME" icon="󰅶" icon.color="$CAFFEINATE_ACTIVE_COLOR"
     else
-        sketchybar --set "$NAME" icon="󰛊" icon.color="$GOLD_MOON"
+        sketchybar --set "$NAME" icon="󰛊" icon.color="$CAFFEINATE_INACTIVE_COLOR"
     fi
 }
 
