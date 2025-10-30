@@ -4,20 +4,31 @@ source $RELPATH/set_colors.sh
 
 ICON_HOTSPOT=􀉤
 ICON_WIFI=􀙇
-ICON_WIFI_ERROR=􀙥
 ICON_WIFI_OFF=􀙈
 
 getname() {
   WIFI_PORT=$(networksetup -listallhardwareports | awk '/Hardware Port: Wi-Fi/{getline; print $2}')
-  WIFI="$(system_profiler SPAirPortDataType | awk '/Current Network/ {getline;$1=$1; gsub(":",""); print;exit}')" #$(ipconfig getsummary $WIFI_PORT | awk -F': ' '/ SSID : / {print $2}')
-  if [[ "$WIFI" == *"redacted"* ]] && [[ -x ~/Applications/wifi-unredactor.app/Contents/MacOS/wifi-unredactor ]]; then
-    WIFI=$(~/Applications/wifi-unredactor.app/Contents/MacOS/wifi-unredactor 2>/dev/null | jq -r '.ssid // "<redacted>"' 2>/dev/null)
+  WIFI="$(system_profiler SPAirPortDataType | awk '/Current Network/ {getline;$1=$1; gsub(":",""); print;exit}')"
+
+  # If SSID is redacted, try wifi-unredactor if available
+  if [[ "$WIFI" == "<redacted>" ]]; then
+    # Check for wifi-unredactor command in PATH
+    if command -v wifi-unredactor &>/dev/null; then
+      UNREDACTED=$(wifi-unredactor 2>/dev/null | jq -r '.ssid // empty')
+      if [[ -n "$UNREDACTED" && "$UNREDACTED" != "failed to retrieve SSID" ]]; then
+        WIFI="$UNREDACTED"
+      fi
+    # Check for wifi-unredactor app bundle
+    elif [[ -x "$HOME/Applications/wifi-unredactor.app/Contents/MacOS/wifi-unredactor" ]]; then
+      UNREDACTED=$("$HOME/Applications/wifi-unredactor.app/Contents/MacOS/wifi-unredactor" 2>/dev/null | jq -r '.ssid // empty')
+      if [[ -n "$UNREDACTED" && "$UNREDACTED" != "failed to retrieve SSID" ]]; then
+        WIFI="$UNREDACTED"
+      fi
+    fi
   fi
+
   HOTSPOT=$(ipconfig getsummary $WIFI_PORT | grep sname | awk '{print $3}')
   IP_ADDRESS=$(scutil --nwi | grep address | sed 's/.*://' | tr -d ' ' | head -1)
-  PUBLIC_IP=$(curl -m 2 https://ipinfo.io 2>/dev/null 1>&2; echo $?)
-
-  ### Set icon according to wifi state
 
   if [[ $HOTSPOT != "" ]]; then
     ICON=$ICON_HOTSPOT
@@ -37,16 +48,6 @@ getname() {
     LABEL="off"
   fi
 
-  ### If no access to internet change icon + add a notice to the label
-
-  if [[ $PUBLIC_IP != "0" && $LABEL != "off" ]];then
-    ICON=$ICON_WIFI_ERROR
-    ICON_COLOR=$SUBTLE
-    LABEL="$WIFI (no internet)"
-  fi
-
-
-
   wifi=(
     icon=$ICON
     label="$LABEL"
@@ -58,28 +59,33 @@ getname() {
 
 setscroll() {
 
-  ### For performances, only scroll on hover
+	### For performances, only scroll on hover
 
-  STATE="$(sketchybar --query $NAME | sed 's/\\n//g; s/\\\$//g; s/\\ //g' | jq -r '.geometry.scroll_texts')"
+	STATE="$(sketchybar --query $NAME | sed 's/\\n//g; s/\\\$//g; s/\\ //g' | jq -r '.geometry.scroll_texts')"
 
-  case "$1" in
-    "on") target="off"
-    ;;
-    "off") target="on"
-    ;;
-  esac
+	case "$1" in
+	"on")
+		target="off"
+		;;
+	"off")
+		target="on"
+		;;
+	esac
 
-  if [[ "$STATE" == "$target" ]]; then
-    sketchybar --set "$NAME" scroll_texts=$1
-  fi
+	if [[ "$STATE" == "$target" ]]; then
+		sketchybar --set "$NAME" scroll_texts=$1
+	fi
 
 }
 
 case "$SENDER" in
-  "mouse.entered") setscroll on
-  ;;
-  "mouse.exited") setscroll off
-  ;;
-  *) getname
-  ;;
+"mouse.entered")
+	setscroll on
+	;;
+"mouse.exited")
+	setscroll off
+	;;
+*)
+	getname
+	;;
 esac

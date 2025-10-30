@@ -1,7 +1,10 @@
 #!/bin/bash
-SCRIPT_NOTIF="export PATH=$PATH; $RELPATH/plugins/notifications/script.sh"
+
+## Scripts
+SCRIPT_NOTIF="export PATH=$PATH; $RELPATH/plugins/notifications/script.sh $GITHUB_TOKEN"
 SCRIPT_CLICK_NOTIF="export PATH=$PATH; open \"https://github.com/notifications\""
 
+## Item properties
 notif=(
   drawing=off
   script="$SCRIPT_NOTIF"
@@ -21,6 +24,9 @@ notif=(
   updates=when_shown
 )
 
+## Item addition
 sketchybar --add item moremenu.notif right \
   --set moremenu.notif "${notif[@]}" \
   --subscribe moremenu.notif more-menu-update wifi_change
+
+sendLog "Added notification item" "vomit"

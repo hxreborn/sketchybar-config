@@ -2,14 +2,15 @@
 export RELPATH=$(dirname $0)/../..;
 source $RELPATH/set_colors.sh
 
-# Check for github token 
-if [[ -f ~/.github_token ]]; then
-GITHUB_TOKEN="$(cat ~/.github_token)" # Should be a PAT with only notification reading permissions
+GITHUB_TOKEN=$1 # (~/.github_token)
 
+# Check for github token 
+if [[ -f $1 ]]; then
+	GITHUB_TOKEN_TEXT="$(cat $1)" # Should be a PAT with only notification reading permissions
   # Get all user's notifications
   notifications="$(curl -m 15 -s \
     -H "Accept: application/vnd.github+json" \
-    -H "Authorization: Bearer $GITHUB_TOKEN" \
+    -H "Authorization: Bearer $GITHUB_TOKEN_TEXT" \
     https://api.github.com/notifications )"
   
   curlSuccess=$?

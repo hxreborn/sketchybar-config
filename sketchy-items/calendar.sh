@@ -1,6 +1,7 @@
 #!/bin/bash
-SCRIPT_CALENDAR="export PATH=$PATH; $RELPATH/plugins/calendar/script.sh"
 
+## Scripts
+SCRIPT_CALENDAR="export PATH=$PATH; $RELPATH/plugins/calendar/script.sh"
 SCRIPT_CLICK_CALENDAR="export PATH=$PATH; $RELPATH/plugins/calendar/click.sh"
 
 calendar=(
@@ -17,6 +18,8 @@ calendar=(
 )
 
 sketchybar --add item calendar right \
-  --set calendar "${calendar[@]}" #\
-#--subscribe calendar system_woke
+  --set calendar "${calendar[@]}"
+
 add_separator "0" "right"
+
+sendLog "Added calendar (date) item" "vomit"

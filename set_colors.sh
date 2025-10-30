@@ -1,27 +1,27 @@
 #!/bin/bash
+source ./log_handler.sh ## Sourcing needed because it can be called outside of sketchybarrc sourcing
+OS_VERSION="$(sw_vers -productVersion)"
 
 # Config sourcing
 if [[ -n "$SKETCHYBAR_CONFIG" && -f "$SKETCHYBAR_CONFIG" ]]; then
-  # External override path (useful for Nix)
-  # shellcheck disable=SC1090
-  source "$SKETCHYBAR_CONFIG"
+	# External override path (useful for Nix)
+	# shellcheck disable=SC1090
+	source "$SKETCHYBAR_CONFIG"
 elif [[ -f ./config.sh ]]; then
-  # Local config file in repository
-  # shellcheck disable=SC1091
-  source ./config.sh
+	# Local config file in repository
+	# shellcheck disable=SC1091
+	source ./config.sh
 fi
 
 # Defaults
 
-export COLOR_SCHEME=${COLOR_SCHEME:=rosepine-moon}
+export COLOR_SCHEME=${COLOR_SCHEME:-rosepine-moon}
+export BAR_TRANSPARENCY=${BAR_TRANSPARENCY:-true}
 : "${THEME_FILE_PATH:="./theme.sh"}"
 
-if [[ -n "$THEME_FILE_PATH" && -f "$THEME_FILE_PATH" ]]; then
-  source "$THEME_FILE_PATH"
-fi
-
+case "$COLOR_SCHEME" in
 # Rosé pine Moon theme
-if [[ "$COLOR_SCHEME" == "rosepine-moon" ]]; then
+"rosepine-moon")
 	# Default Theme colors
 	export BASE=0xff232136
 	export SURFACE=0xff2a273f
@@ -43,8 +43,24 @@ if [[ "$COLOR_SCHEME" == "rosepine-moon" ]]; then
 	export TRANSPARENT=0x00000000
 
 	# General bar colors
-	export BAR_COLOR=0x80414354 #0xD9232136
-	export BORDER_COLOR=0x804D525B
+	if [ $(echo $OS_VERSION | awk -F. '{print $1}') -gt 15 ]; then
+		if [[ $BAR_TRANSPARENCY == true ]]; then
+			export BAR_COLOR=0x80232137
+			export BORDER_COLOR=0x804D525B
+		elif [[ $BAR_TRANSPARENCY == false ]]; then
+			export BAR_COLOR=0xff232137
+			export BORDER_COLOR=0xff4D525B
+		fi
+	else
+		if [[ $BAR_TRANSPARENCY == true ]]; then
+			export BAR_COLOR=0x80414354
+			export BORDER_COLOR=0x804D525B
+		elif [[ $BAR_TRANSPARENCY == false ]]; then
+			export BAR_COLOR=0xff414354
+			export BORDER_COLOR=0xff4D525B
+		fi
+	fi
+
 	export ICON_COLOR=$TEXT  # Color of all icons
 	export LABEL_COLOR=$TEXT # Color of all labels
 
@@ -56,10 +72,10 @@ if [[ "$COLOR_SCHEME" == "rosepine-moon" ]]; then
 	# Custom caffeinate colors
 	export CAFFEINATE_ACTIVE_COLOR=$NOTICE
 	export CAFFEINATE_INACTIVE_COLOR=$MUTED
-fi
+	;;
 
 # Catpuccin Mocha theme
-if [[ "$COLOR_SCHEME" == "catppuccin-mocha" ]]; then
+"catppuccin-mocha")
 	# Default Theme colors
 	export BASE=0xff1e1e2e
 	export SURFACE=0xff6c7086
@@ -83,8 +99,13 @@ if [[ "$COLOR_SCHEME" == "catppuccin-mocha" ]]; then
 	export TRANSPARENT=0x00000000
 
 	# General bar colors
-	export BAR_COLOR=0x80313244 #0xD9232136
-	export BORDER_COLOR=0x8045475a
+	if [[ $BAR_TRANSPARENCY == true ]]; then
+		export BAR_COLOR=0xB81f1f30
+		export BORDER_COLOR=0xB845475a
+	elif [[ $BAR_TRANSPARENCY == false ]]; then
+		export BAR_COLOR=0xff1f1f30
+		export BORDER_COLOR=0xff45475a
+	fi
 	export ICON_COLOR=$TEXT  # Color of all icons
 	export LABEL_COLOR=$TEXT # Color of all labels
 
@@ -96,4 +117,14 @@ if [[ "$COLOR_SCHEME" == "catppuccin-mocha" ]]; then
 	# Custom caffeinate colors
 	export CAFFEINATE_ACTIVE_COLOR=$NOTICE
 	export CAFFEINATE_INACTIVE_COLOR=$MUTED
-fi
+	;;
+*)
+	if [[ -n "$THEME_FILE_PATH" && -f "$THEME_FILE_PATH" ]]; then
+		sendLog "Theme specified isn't a default theme ($COLOR_SCHEME), Loading custom theme file $THEME_FILE_PATH" "info"
+		source "$THEME_FILE_PATH"
+	else
+		sendErr "Theme specified isn't a default theme ($COLOR_SCHEME) and no theme.sh was specified" "info"
+		exit
+	fi
+	;;
+esac
