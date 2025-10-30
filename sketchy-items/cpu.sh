@@ -5,6 +5,7 @@ GRAPH_WIDTH=140
 PERCENT_WIDTH=24
 
 GRAPH_SCRIPT="export PATH=$PATH; $RELPATH/plugins/graph/script.sh"
+GRAPH_CLICK_SCRIPT="export PATH=$PATH; $RELPATH/plugins/graph/click.sh"
 
 # Allow override of update frequency via CPU_UPDATE_FREQ from config
 : "${CPU_UPDATE_FREQ:=2}"
@@ -20,8 +21,9 @@ graph=(
   background.padding_left=4
   background.padding_right=0
   background.drawing=on
-  background.height=$(($BAR_HEIGHT - $GRAPH_MARGIN * 2 - 9))
+  background.height=$(($BAR_HEIGHT - $GRAPH_MARGIN * 2))
   script="$GRAPH_SCRIPT"
+  click_script="$GRAPH_CLICK_SCRIPT"
   update_freq=$CPU_UPDATE_FREQ
 )
 

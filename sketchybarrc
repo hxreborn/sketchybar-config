@@ -114,11 +114,11 @@ source "$RELPATH/sketchy-items/music.sh"
 source "$RELPATH/sketchy-items/cpu.sh"
 
 sketchybar --add bracket base-controls battery wifi display \
-  --set base-controls "${zones[@]}" \
+  --set base-controls click_script="" "${zones[@]}" \
   --add bracket volume_controls volume_icon mic caffeinate \
-  --set volume_controls "${zones[@]}" \
+  --set volume_controls click_script="" "${zones[@]}" \
   --add bracket more_menu '/moremenu\..*/' "${menuitem[@]}" \
-  --set more_menu "${zones[@]}"
+  --set more_menu click_script="" "${zones[@]}"
 
 sketchybar --update
 
